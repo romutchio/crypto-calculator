@@ -1,0 +1,49 @@
+basePath: /
+host: localhost:8082
+info:
+  contact: {}
+  description: Calculator API Description
+  title: Calculator API
+  version: "1.0"
+paths:
+  /:
+    get:
+      consumes:
+      - '*/*'
+      description: get the status of server.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Show the status of server.
+      tags:
+      - root
+  /api/v1/calculate:
+    get:
+      parameters:
+      - description: from
+        in: query
+        name: from
+        required: true
+        type: string
+      - description: to
+        in: query
+        name: to
+        required: true
+        type: string
+      - description: amount
+        in: query
+        name: amount
+        required: true
+        type: number
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+      summary: CalculateHandler crypto/fiat exchange
+swagger: "2.0"

@@ -1,0 +1,48 @@
+version: '3.8'
+
+volumes:
+  dbdata:
+
+services:
+  app:
+    entrypoint: /app/app
+    build:
+      context: ../
+      args:
+        version: ${VERSION}
+    env_file:
+      - .env
+    environment:
+      FAST_FOREX_TOKEN: ${FAST_FOREX_TOKEN}
+      DB_HOST: db
+    ports:
+      - "8082:8080"
+    depends_on:
+      db:
+        condition: service_started
+
+  migrate:
+    build:
+      dockerfile: deployment/migrator/Dockerfile
+      context: ../
+    env_file:
+      - .env
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ${DB_NAME}
+    depends_on:
+      db:
+        condition: service_started
+
+  db:
+    image: postgres:10.8-alpine
+    restart: always
+    environment:
+      POSTGRES_DB: calculator
+      POSTGRES_PASSWORD: calculator
+      POSTGRES_USER: calculator
+    ports:
+      - "5433:5432"
